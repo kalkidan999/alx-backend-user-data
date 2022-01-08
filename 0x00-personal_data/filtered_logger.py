@@ -5,6 +5,8 @@
 
 import re
 import logging
+import mysql.connector
+from os import getenv
 from typing import List
 
 
@@ -59,3 +61,23 @@ def get_logger() -> logging.Logger:
     sh.setFormatter(useFormat)
     userlog.addHandler(sh)
     return userlog
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """ connect to a secure holberton database to read a users table.
+    The database is protected by a username and password that are set as
+    environment variables on the server named PERSONAL_DATA_DB_USERNAME
+    (set the default as “root”), PERSONAL_DATA_DB_PASSWORD
+    and PERSONAL_DATA_DB_HOST (default as “localhost”).
+    The database name is stored in PERSONAL_DATA_DB_NAME.
+    Implement a get_db function that returns a connector to the database
+    (mysql.connector.connection.MySQLConnection object).
+    Use the os module to obtain credentials from the environment
+    Use the module mysql-connector-python to connect to the MySQL database
+    """
+    mySql = mysql.connector.connection.MySQLConnection(
+        user=getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
+        password=getenv('PERSONAL_DATA_DB_PASSWORD', ''),
+        host=getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
+        database=getenv('PERSONAL_DATA_DB_NAME'))
+    return mySql
