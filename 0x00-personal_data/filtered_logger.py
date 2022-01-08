@@ -44,6 +44,7 @@ class RedactingFormatter(logging.Formatter):
                             super(RedactingFormatter, self).format(record),
                             self.SEPARATOR)
 
+
 def get_logger() -> logging.Logger:
     """returns logging.Logger object
     The logger should be named "user_data" and only log up to logging.INFO
