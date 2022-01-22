@@ -1,44 +1,44 @@
 #!/usr/bin/env python3
+""" Module of authentication
 """
-Auth Module
-"""
-from os import getenv
+
+
 from typing import List, TypeVar
-from flask import Flask, jsonify, abort, request, jsonify
-from flask_cors import (CORS, cross_origin)
-import os
+from flask import request
+import re
 
 
-class Auth():
-    """Auth Class"""
-    def require_auth(self, path: str, excluded_paths:
-                     List[str]) -> bool:
-        """ returns false - path and excluded_paths is used later
+class Auth:
+    """
+        Authentication Class
+    """
+
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
-        if path is None or excluded_paths is None or len(excluded_paths) == 0:
+            Checks if authentication is required
+        """
+        if path is None or excluded_paths is None:
             return True
-        if path[-1] != '/':
-            path += '/'
-
-        for paths in excluded_paths:
-            if paths.endswith('*'):
-                if path.startswith(paths[:-1]):
+        for ex_path in excluded_paths:
+            if "*" in ex_path:
+                if re.search(ex_path.replace("*", ".*"), path):
                     return False
-            elif path == paths:
-                return False
-
+            else:
+                if re.search(path, ex_path):
+                    return False
         return True
 
     def authorization_header(self, request=None) -> str:
         """
-        returns None - request will be the Flask request object
+            Return Authorization header if it exists
         """
-        if request is None:
-            return None
-        return request.headers.get('Authorization', None)
+        return (None
+                if request is None or 'Authorization' not in request.headers
+                else request.headers['Authorization']
+                )
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
-        returns None - request will be the Flask request object
+            Undetirmined
         """
         return None
